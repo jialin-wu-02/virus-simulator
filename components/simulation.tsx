@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 interface simulationProps {
     restart: boolean;
-    population : number;
+    data : any;
     updateChartDataHandle(any) : void;
     restartDoneHandler() : void;
 }
@@ -24,13 +24,15 @@ class simulation extends Component<simulationProps> {
         this.ctx = null;
         this.width = 370;
         this.height = 370;
-        this.population = this.props.population;
+        this.population = this.props.data;
         this.beings = [];
         this.frame = 0;
         this.infectedSum = 1;
     }
 
     restart = () => {
+        console.log(this.props.data);
+        this.population = this.props.data;
         this.initBeings(this.population);
         this.frame = 0;
         this.infectedSum = 1;

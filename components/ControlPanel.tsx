@@ -9,6 +9,10 @@ class ControlPanel extends Component<{restartHandle(any) : void;}, {populationVa
         };
     }
 
+    handleChange = (e) => {
+        this.setState({populationValue: e.target.value});
+    }
+
     render () {
         return (
             <div className="controlPanelContainer" style={{width: "500px"}}>
@@ -16,7 +20,9 @@ class ControlPanel extends Component<{restartHandle(any) : void;}, {populationVa
                 <div className="input-group-prepend">
                     <span className="input-group-text" id="inputGroup-sizing-default"> Population </span>
                 </div>
-                <input type="text" value={this.state.populationValue} className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                <input type="text" value={this.state.populationValue} onChange={this.handleChange}
+                       className="form-control" aria-label="Sizing example input"
+                       aria-describedby="inputGroup-sizing-default" />
             </div>
             <button type="button" className="btn btn-outline-primary" onClick={() => this.props.restartHandle(this.state.populationValue)}> Restart </button>
         </div>

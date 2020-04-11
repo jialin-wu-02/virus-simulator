@@ -24,13 +24,12 @@ class Home extends Component<{}, { restart, data, population }> {
     });
   }
 
-  restartSimulation = (population) => {
-    console.log("click and restart...");
+  restartHandle = (population) => {
+    console.log(population);
     this.setState({ restart: true, population })
   }
 
   restartDoneHandler = () => {
-    console.log("Done");
     this.setState({ restart: false })
   }
 
@@ -44,10 +43,10 @@ class Home extends Component<{}, { restart, data, population }> {
         <main>
           <Header />
           <div style={{display: "flex", alignItems: "center"}}>
-            <Simulation restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} updateChartDataHandle={(data) => this.updateData(data)} population={200} />
+            <Simulation data={this.state.population} restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} updateChartDataHandle={(data) => this.updateData(data)} />
             <Chart restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} data={this.state.data} />
           </div>
-          <ControlPanel restartHandle={(data) => this.restartSimulation(data)} />
+          <ControlPanel restartHandle={(data) => this.restartHandle(data)} />
         </main>
       </div>
     )

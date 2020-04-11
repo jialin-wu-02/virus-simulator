@@ -6,8 +6,8 @@ class chart extends Component<{data : any, restart : boolean, restartDoneHandler
     hourlyChart = null;
 
     componentDidMount = () => {
-        const labels = this.props.data[0];
-        const data = this.props.data[1];
+        let labels = this.props.data[0];
+        let data = this.props.data[1];
         var ctx = this.refs.chart;
         this.hourlyChart = new Chart(ctx, {
             type: 'line',
