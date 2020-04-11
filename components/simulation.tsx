@@ -9,16 +9,16 @@ class simulation extends Component<simulationProps> {
     componentDidMount() {
         let canvas : any = this.refs.canvas,
             ctx = canvas.getContext("2d"),
-            width = 350,
-            height = 350,
+            width = 370,
+            height = 370,
             beings = [],
             frame = 0,
             population = this.props.population;
 
         canvas.width = width;
         canvas.height = height;
-        canvas.style.width = "350px";
-        canvas.style.height = "350px";
+        canvas.style.width = "370px";
+        canvas.style.height = "370px";
 
         const initBeings = (population) => {
             let id = 0

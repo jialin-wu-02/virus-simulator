@@ -61,7 +61,7 @@ class chart extends Component<{data : any}> {
     render () {
         return (
             <div className="chartContainer">
-                <canvas ref="chart" width="350" height="200"></canvas>
+                <canvas ref="chart" width="300" height="200"></canvas>
             </div>
         )
     }
