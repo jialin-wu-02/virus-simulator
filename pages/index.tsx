@@ -5,13 +5,16 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Header from '../components/header';
 import Simulation from '../components/simulation';
 import Chart from '../components/chart';
+import ControlPanel from '../components/ControlPanel';
 
 
-class Home extends Component<{}, { data,}> {
+class Home extends Component<{}, { restart, data, population }> {
   constructor(props) {
     super(props);
     this.state = {
+      restart: false,
       data: [[0], [0]],
+      population: 200
     }
   }
 
@@ -21,20 +24,30 @@ class Home extends Component<{}, { data,}> {
     });
   }
 
+  restartSimulation = (population) => {
+    console.log("click and restart...");
+    this.setState({ restart: true, population })
+  }
+
+  restartDoneHandler = () => {
+    console.log("Done");
+    this.setState({ restart: false })
+  }
 
   render() {
     return (
         <div className="container">
         <Head>
-          <title> Covid19 Simulator </title>
+          <title> A Real-Time Generated Responsive Virus Simulation </title>
         </Head>
   
         <main>
           <Header />
           <div style={{display: "flex", alignItems: "center"}}>
-            <Simulation updateChartDataHandle={(data) => this.updateData(data)} population={200} />
-            <Chart data={this.state.data} />
+            <Simulation restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} updateChartDataHandle={(data) => this.updateData(data)} population={200} />
+            <Chart restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} data={this.state.data} />
           </div>
+          <ControlPanel restartHandle={(data) => this.restartSimulation(data)} />
         </main>
       </div>
     )

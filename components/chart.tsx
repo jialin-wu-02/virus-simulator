@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Chart from 'chart.js';
 
-class chart extends Component<{data : any}> {
+class chart extends Component<{data : any, restart : boolean, restartDoneHandler() : void;}> {
 
     hourlyChart = null;
 
@@ -41,12 +41,31 @@ class chart extends Component<{data : any}> {
         this.hourlyChart.canvas.parentNode.style.width = '700px';
     }
 
-    shouldComponentUpdate = (nextProps, nextState) => {
-        if (nextProps.data[0].length > 0) {
-            this.addData(this.props.data[0][this.props.data[0].length - 1], this.props.data[1][this.props.data[1].length - 1]);
+    restart = () => {
+        this.hourlyChart.data = {
+            labels: [0],
+            datasets: [{
+                label: "Infeceted Population",
+                data: [0],
+                backgroundColor: 'rgb(254, 115, 103, 0.4)',
+                borderColor: 'rgb(254, 115, 103, 0.8)', 
+                borderWidth: 2
+            }]
         }
-        return nextProps.data[0].length > this.props.data[0] ||
-                nextProps.data[1].length > this.props.data[1];
+
+        this.hourlyChart.update();
+    }
+
+    componentDidUpdate = (prevProps) => {
+        if (this.props.restart) {
+            console.log("restart")
+            this.props.restartDoneHandler();
+            this.restart();
+        } else {
+            if (this.props.data[0].length > 0) {
+                this.addData(this.props.data[0][this.props.data[0].length - 1], this.props.data[1][this.props.data[1].length - 1]);
+            }
+        }
     }
 
     addData = (label, data) => {
