@@ -8,13 +8,18 @@ import Chart from '../components/chart';
 import ControlPanel from '../components/ControlPanel';
 
 
-class Home extends Component<{}, { restart, data, population }> {
+class Home extends Component<{}, { restart, data, parameters }> {
   constructor(props) {
     super(props);
     this.state = {
       restart: false,
       data: [[0], [0]],
-      population: 200
+      parameters: {
+        population: 150,
+        washHand: 0,
+        socialDistance: 0,
+        model: "individual"
+      }
     }
   }
 
@@ -24,9 +29,8 @@ class Home extends Component<{}, { restart, data, population }> {
     });
   }
 
-  restartHandle = (population) => {
-    console.log(population);
-    this.setState({ restart: true, population })
+  restartHandle = (parameters) => {
+    this.setState({restart: true, parameters})
   }
 
   restartDoneHandler = () => {
@@ -43,10 +47,10 @@ class Home extends Component<{}, { restart, data, population }> {
         <main>
           <Header />
           <div style={{display: "flex", alignItems: "center"}}>
-            <Simulation data={this.state.population} restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} updateChartDataHandle={(data) => this.updateData(data)} />
+            <Simulation parameters={this.state.parameters} restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} updateChartDataHandle={(data) => this.updateData(data)} />
             <Chart restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} data={this.state.data} />
           </div>
-          <ControlPanel restartHandle={(data) => this.restartHandle(data)} />
+          <ControlPanel restartHandle={(args) => this.restartHandle(args)} />
         </main>
       </div>
     )

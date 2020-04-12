@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import Chart from 'chart.js';
 
-class chart extends Component<{data : any, restart : boolean, restartDoneHandler() : void;}> {
+interface propType {
+    data : any;
+    restart : boolean;
+    restartDoneHandler() : void;
+}
+
+class chart extends Component<propType> {
 
     hourlyChart = null;
 
