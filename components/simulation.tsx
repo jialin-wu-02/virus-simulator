@@ -17,6 +17,7 @@ class simulation extends Component<simulationProps> {
     frame : number;
     population : number;
     infectedSum : number;
+    cureDelay : number;
 
     constructor(props) {
         super(props);
@@ -28,6 +29,7 @@ class simulation extends Component<simulationProps> {
         this.beings = [];
         this.frame = 0;
         this.infectedSum = 1;
+        this.cureDelay = 400;
     }
 
     restart = () => {
@@ -44,7 +46,7 @@ class simulation extends Component<simulationProps> {
         let id = 0
         for (let i = 0; i < population; i++) {
             let randomDirection = Math.floor(Math.random() * 360);
-            let randomSpeed = Math.random() * 2;
+            let randomSpeed = Math.random() * 1.5;
             let being = {
                 id,
                 x: Math.random() * this.width,
@@ -56,6 +58,8 @@ class simulation extends Component<simulationProps> {
                 velY: Math.sin(randomDirection) * randomSpeed,
                 color: "#ccc",
                 infected: false,
+                cured: false,
+                cureDelayCountDown: this.cureDelay
             }
             this.beings.push(being);
             id += 1;
@@ -82,8 +86,9 @@ class simulation extends Component<simulationProps> {
         this.beings.forEach((being) => {
             if (being.id != currentBeing.id && (being.infected || currentBeing.infected) && 
                 !(being.infected && currentBeing.infected)) {
-                if (Math.pow(currentBeing.x - being.x, 2) + Math.pow(currentBeing.y - being.y, 2) < 
-                    Math.pow(range + being.radius + currentBeing.radius, 2)) {
+                if ((Math.pow(currentBeing.x - being.x, 2) + Math.pow(currentBeing.y - being.y, 2) < 
+                    Math.pow(range + being.radius + currentBeing.radius, 2)) 
+                        && (currentBeing.cured == false) && (being.cured == false)) {
                     // infected
                     currentBeing.color = "red";
                     being.color = "red";
@@ -105,6 +110,18 @@ class simulation extends Component<simulationProps> {
         this.ctx.stroke();
     }
 
+    cureDelayHandler = (being) => {
+        if (being.infected && being.cureDelayCountDown > 0) {
+            being.cureDelayCountDown -= 1;
+        } else if (being.infected && being.cureDelayCountDown == 0) {
+            being.cureDelayCountDown = this.cureDelay;
+            being.infected = false;
+            being.cured = true;
+            being.color = "rgb(104, 181, 253)";
+            this.infectedSum -= 1;
+        }
+    }
+
     update = () => {
         this.ctx.clearRect(0, 0, this.width, this.height);
         // seperate collision detection and move.
@@ -114,13 +131,17 @@ class simulation extends Component<simulationProps> {
         })
         this.beings.forEach(being => {
             this.move(being);
+            if (this.props.parameters.washHand == 1) {
+                this.cureDelayHandler(being);
+            }
             this.drawCircle(being.x, being.y, being.radius, being.color);
         });
         if (this.frame % 10 == 0) {
+            console.log(this.infectedSum);
             this.props.updateChartDataHandle([this.frame, this.infectedSum]);
         }
         this.frame += 1;
-        if (this.infectedSum < this.population) {
+        if (this.infectedSum < this.population && this.infectedSum != 0) {
             requestAnimationFrame(this.update);
         }
     }

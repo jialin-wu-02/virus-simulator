@@ -25,6 +25,12 @@ class chart extends Component<propType> {
                     backgroundColor: 'rgb(254, 115, 103, 0.4)',
                     borderColor: 'rgb(254, 115, 103, 0.8)', 
                     borderWidth: 2
+                }, {
+                    label: "Cured Population",
+                    data: data,
+                    backgroundColor: 'rgb(104, 181, 253, 0.4)',
+                    borderColor: 'rgb(104, 181, 253, 0.8)', 
+                    borderWidth: 2
                 }]
             },
             options: {
