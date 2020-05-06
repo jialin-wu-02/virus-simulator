@@ -4,16 +4,17 @@ import Chart from 'chart.js';
 interface propType {
     data : any;
     restart : boolean;
+    population: number;
     restartDoneHandler() : void;
 }
 
 class chart extends Component<propType> {
 
     hourlyChart = null;
-
     componentDidMount = () => {
         let labels = this.props.data[0];
-        let data = this.props.data[1];
+        let dataInfected = this.props.data[1];
+        let dataCured = this.props.data[2];
         var ctx = this.refs.chart;
         this.hourlyChart = new Chart(ctx, {
             type: 'line',
@@ -21,17 +22,18 @@ class chart extends Component<propType> {
                 labels,
                 datasets: [{
                     label: "Infeceted Population",
-                    data: data,
+                    data: dataInfected,
                     backgroundColor: 'rgb(254, 115, 103, 0.4)',
                     borderColor: 'rgb(254, 115, 103, 0.8)', 
                     borderWidth: 2
                 }, {
                     label: "Cured Population",
-                    data: data,
+                    data: dataCured,
                     backgroundColor: 'rgb(104, 181, 253, 0.4)',
                     borderColor: 'rgb(104, 181, 253, 0.8)', 
                     borderWidth: 2
                 }]
+                
             },
             options: {
                 title: {
@@ -43,7 +45,8 @@ class chart extends Component<propType> {
                 scales: {
                     yAxes: [{
                         ticks: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            // max: this.props.population
                         }
                     }]
                 }
@@ -62,8 +65,15 @@ class chart extends Component<propType> {
                 backgroundColor: 'rgb(254, 115, 103, 0.4)',
                 borderColor: 'rgb(254, 115, 103, 0.8)', 
                 borderWidth: 2
+            }, {
+                label: "Cured Population",
+                data: [0],
+                backgroundColor: 'rgb(104, 181, 253, 0.4)',
+                borderColor: 'rgb(104, 181, 253, 0.8)', 
+                borderWidth: 2
             }]
         }
+        // this.hourlyChart.options.scales.yAxes[0].ticks.max = this.props.population;
 
         this.hourlyChart.update();
     }
@@ -75,16 +85,17 @@ class chart extends Component<propType> {
             this.restart();
         } else {
             if (this.props.data[0].length > 0) {
-                this.addData(this.props.data[0][this.props.data[0].length - 1], this.props.data[1][this.props.data[1].length - 1]);
+                this.addData(this.props.data[0][this.props.data[0].length - 1], 
+                            this.props.data[1][this.props.data[1].length - 1], 
+                            this.props.data[2][this.props.data[2].length - 1]);
             }
         }
     }
 
-    addData = (label, data) => {
+    addData = (label, dataInfected, dataCured) => {
         this.hourlyChart.data.labels.push(label);
-        this.hourlyChart.data.datasets.forEach((dataset) => {
-            dataset.data.push(data);
-        });
+        this.hourlyChart.data.datasets[0].data.push(dataInfected);
+        this.hourlyChart.data.datasets[1].data.push(dataCured);
 
         this.hourlyChart.update();
     }

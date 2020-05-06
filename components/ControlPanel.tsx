@@ -33,7 +33,7 @@ class ControlPanel extends Component<propType, stateType> {
     }
 
     handleSocialDistanceChange = (e) => {
-        this.setState({socialDistance: e.target.value});
+        this.setState({socialDistance: parseInt(e.target.value)});
     }
 
     handleModelChange = (e) => {
@@ -56,9 +56,9 @@ class ControlPanel extends Component<propType, stateType> {
                     <option value={0}> No </option>
                 </select>
                 <select onChange={this.handleSocialDistanceChange} className="custom-select" id="inputGroupSelect03">
-                    <option selected> Social Distancing </option>
+                    <option selected> Quarantine Factor </option>
                     <option value={97}> Strictly Enforced (97%) </option>
-                    <option value={50}>  Loosely Enforced (50%) </option>
+                    <option value={70}>  Loosely Enforced (70%) </option>
                     <option value={0}>  No Social Distancing (0%) </option>
                 </select>
                 <select onChange={this.handleModelChange} className="custom-select" id="inputGroupSelect03">
@@ -66,12 +66,6 @@ class ControlPanel extends Component<propType, stateType> {
                     <option value="individual"> Individual Model </option>
                     <option value="family">  Family Model </option>
                 </select>
-                {/* <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-default"> Population </span>
-                </div>
-                <input type="text" value={this.state.population} onChange={this.handleChange}
-                       className="form-control" aria-label="Sizing example input"
-                       aria-describedby="inputGroup-sizing-default" /> */}
                 <div className="input-group-append">
                     <button type="button" className="btn btn-outline-secondary" 
                             onClick={() => this.props.restartHandle({

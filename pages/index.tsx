@@ -13,7 +13,7 @@ class Home extends Component<{}, { restart, data, parameters }> {
     super(props);
     this.state = {
       restart: false,
-      data: [[0], [0]],
+      data: [[0], [0], [0]],
       parameters: {
         population: 150,
         washHand: 0,
@@ -25,11 +25,12 @@ class Home extends Component<{}, { restart, data, parameters }> {
 
   updateData = (newData : any) => {
     this.setState({
-      data: [[...this.state.data[0], newData[0]], [...this.state.data[1], newData[1]]]
+      data: [[...this.state.data[0], newData[0]], [...this.state.data[1], newData[1]], [...this.state.data[2], newData[2]]]
     });
   }
 
   restartHandle = (parameters) => {
+    console.log(parameters);
     this.setState({restart: true, parameters})
   }
 
@@ -48,7 +49,7 @@ class Home extends Component<{}, { restart, data, parameters }> {
           <Header />
           <div style={{display: "flex", alignItems: "center"}}>
             <Simulation parameters={this.state.parameters} restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} updateChartDataHandle={(data) => this.updateData(data)} />
-            <Chart restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} data={this.state.data} />
+            <Chart population={this.state.parameters.population} restartDoneHandler={this.restartDoneHandler} restart={this.state.restart} data={this.state.data} />
           </div>
           <ControlPanel restartHandle={(args) => this.restartHandle(args)} />
         </main>

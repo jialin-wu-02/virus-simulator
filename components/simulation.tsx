@@ -18,6 +18,9 @@ class simulation extends Component<simulationProps> {
     population : number;
     infectedSum : number;
     cureDelay : number;
+    curedSum : number;
+    socialDistanceFactor : number;
+    socialDistanceFactorArray : Array<boolean>;
 
     constructor(props) {
         super(props);
@@ -30,14 +33,22 @@ class simulation extends Component<simulationProps> {
         this.frame = 0;
         this.infectedSum = 1;
         this.cureDelay = 400;
+        this.curedSum = 0;
+        this.socialDistanceFactor = this.props.parameters.socialDistance;
+        this.socialDistanceFactorArray = [];
+        for (var i = 0; i < this.population; i++) {
+            this.socialDistanceFactorArray.push(this.socialDistanceFactor > i)
+        }
+
     }
 
     restart = () => {
-        console.log(this.props.parameters);
         this.population = this.props.parameters.population;
+        this.socialDistanceFactor = this.props.parameters.socialDistance;
         this.initBeings(this.population);
         this.frame = 0;
         this.infectedSum = 1;
+        this.curedSum = 0;
         this.update();
     }
 
@@ -64,13 +75,19 @@ class simulation extends Component<simulationProps> {
             this.beings.push(being);
             id += 1;
         }
+        this.socialDistanceFactorArray = [];
+        for (var i = 0; i < this.population; i++) {
+            this.socialDistanceFactorArray.push(this.socialDistanceFactor / 100 * this.population > i)
+        }
         this.beings[0].infected = true;
         this.beings[0].color = "red";
     }
 
     move = (being) => {
-        being.x += being.velX;
-        being.y += being.velY;
+        if (!this.socialDistanceFactorArray[being.id]) {
+            being.x += being.velX;
+            being.y += being.velY;
+        }
     }
 
     checkBoundary = (being) => {
@@ -119,6 +136,7 @@ class simulation extends Component<simulationProps> {
             being.cured = true;
             being.color = "rgb(104, 181, 253)";
             this.infectedSum -= 1;
+            this.curedSum += 1;
         }
     }
 
@@ -137,8 +155,7 @@ class simulation extends Component<simulationProps> {
             this.drawCircle(being.x, being.y, being.radius, being.color);
         });
         if (this.frame % 10 == 0) {
-            console.log(this.infectedSum);
-            this.props.updateChartDataHandle([this.frame, this.infectedSum]);
+            this.props.updateChartDataHandle([this.frame, this.infectedSum, this.curedSum]);
         }
         this.frame += 1;
         if (this.infectedSum < this.population && this.infectedSum != 0) {
